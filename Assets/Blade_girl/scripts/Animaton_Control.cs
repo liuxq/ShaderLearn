@@ -22,7 +22,7 @@ public class Animaton_Control : MonoBehaviour
 
         if (GUI.Button(new Rect(20, 20, 70, 40), "Idle"))
         {
-            frog.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            frog.GetComponent<Animation>().wrapMode = WrapMode.Once;
             frog.GetComponent<Animation>().CrossFade("Idle");
         }
         if (GUI.Button(new Rect(90, 20, 70, 40), "Walk"))
@@ -72,7 +72,7 @@ public class Animaton_Control : MonoBehaviour
         }
         if (GUI.Button(new Rect(720, 20, 70, 40), "Jump"))
         {
-            frog.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            frog.GetComponent<Animation>().wrapMode = WrapMode.Once;
             frog.GetComponent<Animation>().CrossFade("Jump_NoBlade");
         }
         if (GUI.Button(new Rect(20, 65, 70, 40), "Draw Blade"))
@@ -87,32 +87,32 @@ public class Animaton_Control : MonoBehaviour
         }
         if (GUI.Button(new Rect(160, 65, 70, 40), "Attack00"))
         {
-            frog.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            frog.GetComponent<Animation>().wrapMode = WrapMode.Once;
             frog.GetComponent<Animation>().CrossFade("Attack00");
         }
         if (GUI.Button(new Rect(230, 65, 70, 40), "Attack01"))
         {
-            frog.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            frog.GetComponent<Animation>().wrapMode = WrapMode.Once;
             frog.GetComponent<Animation>().CrossFade("Attack");
         }
         if (GUI.Button(new Rect(300, 65, 70, 40), "Block"))
         {
-            frog.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            frog.GetComponent<Animation>().wrapMode = WrapMode.Once;
             frog.GetComponent<Animation>().CrossFade("Block");
         }
         if (GUI.Button(new Rect(370, 65, 70, 40), "Attack02"))
         {
-            frog.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            frog.GetComponent<Animation>().wrapMode = WrapMode.Once;
             frog.GetComponent<Animation>().CrossFade("Attack01");
         }
         if (GUI.Button(new Rect(440, 65, 70, 40), "Combo"))
         {
-            frog.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            frog.GetComponent<Animation>().wrapMode = WrapMode.Once;
             frog.GetComponent<Animation>().CrossFade("ComboAttack");
         }
         if (GUI.Button(new Rect(510, 65, 70, 40), "Skill"))
         {
-            frog.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            frog.GetComponent<Animation>().wrapMode = WrapMode.Once;
             frog.GetComponent<Animation>().CrossFade("Skill");
         }
         if (GUI.Button(new Rect(580, 65, 70, 40), "M_Avoid"))
@@ -153,28 +153,28 @@ public class Animaton_Control : MonoBehaviour
 
         if (GUI.Button(new Rect(300, 110, 70, 40), "Jump01"))
         {
-            frog.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            frog.GetComponent<Animation>().wrapMode = WrapMode.Once;
             frog.GetComponent<Animation>().CrossFade("jump");
         }
         if (GUI.Button(new Rect(370, 110, 70, 40), "PickUp"))
         {
-            frog.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            frog.GetComponent<Animation>().wrapMode = WrapMode.Once;
             frog.GetComponent<Animation>().CrossFade("Pickup");
         }
 
         if (GUI.Button(new Rect(440, 110, 70, 40), "Damage"))
         {
-            frog.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            frog.GetComponent<Animation>().wrapMode = WrapMode.Once;
             frog.GetComponent<Animation>().CrossFade("Damage");
         }
         if (GUI.Button(new Rect(510, 110, 70, 40), "Death"))
         {
-            frog.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            frog.GetComponent<Animation>().wrapMode = WrapMode.Once;
             frog.GetComponent<Animation>().CrossFade("Death");
         }
         if (GUI.Button(new Rect(580, 110, 120, 40), "GangnamStyle"))
         {
-            frog.GetComponent<Animation>().wrapMode = WrapMode.Loop;
+            frog.GetComponent<Animation>().wrapMode = WrapMode.Once;
             frog.GetComponent<Animation>().CrossFade("GanamStyle");
         }
         if (GUI.Button(new Rect(620, 470, 120, 40), "Ver 2.0"))

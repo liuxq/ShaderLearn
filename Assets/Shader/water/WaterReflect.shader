@@ -1,42 +1,57 @@
-﻿Shader "Custom/WaterReflect" {
-	Properties {
-		_Color ("Color", Color) = (1,1,1,1)
-		_MainTex ("Albedo (RGB)", 2D) = "white" {}
-		_Cube("Cube", Cube) = "" {}
-	}
-	SubShader {
+﻿Shader "Water/WaterReflect" {
+    Properties {
+	_WaveSpeed ("Wave speed", Vector) = (0,-1,0,0)
+	_Exposure ("Exposure", Float) = 1
+	_Distortion ("Distortion", Range(-10,.5)) = 0
+	_Glos ("Glos", Range(0,.5)) = 0			
+    _MainTex ("SurfaceWaveTexture", 2D) = "white" {}
+    _BottomTex ("BottomTexture", 2D) = "white" {}
+	_Cube ("Cubemap", CUBE) = "" {}
+    }
+    SubShader {
 		Tags { "RenderType"="Opaque" }
-		LOD 200
-		
+		LOD 250
 		CGPROGRAM
-		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows
-
-		// Use shader model 3.0 target, to get nicer looking lighting
-		#pragma target 3.0
-
-		sampler2D _MainTex;
-		samplerCUBE _Cube;
+		#pragma surface surf MobileBlinnPhong exclude_path:prepass nolightmap noforwardadd halfasview
+		
+		inline fixed4 LightingMobileBlinnPhong (SurfaceOutput s, fixed3 lightDir, fixed3 halfDir, fixed atten)
+		{
+		fixed diff = max (0, dot (s.Normal, lightDir));
+		fixed nh = max (0, dot (s.Normal, halfDir));
+		fixed spec = pow (nh, s.Specular*128) * s.Gloss;
+		fixed4 c;
+		c.rgb = (s.Albedo * _LightColor0.rgb * diff + _LightColor0.rgb * spec) * (atten*2);
+		c.a = 0.0;
+		return c;
+		}
 
 		struct Input {
-			float2 uv_MainTex;
-			float3 worldRefl;
+		float2 uv_MainTex;
+		float2 uv_BottomTex;
+		float3 worldPos;
+		float3 worldRefl;
+		float3 worldNormal;
+		INTERNAL_DATA
 		};
 
-		half _Glossiness;
-		half _Metallic;
-		fixed4 _Color;
+		sampler2D _MainTex;
+		sampler2D _BottomTex;
+		samplerCUBE _Cube;
+		uniform float _Exposure;
+		uniform float _Distortion;
+		uniform float4 _WaveSpeed;
+		float _Glos;
 
-		void surf (Input IN, inout SurfaceOutputStandard o) {
-			// Albedo comes from a texture tinted by color
-			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-			o.Albedo = c.rgb;
-			o.Alpha = c.a;
-
-			o.Emission = texCUBE(_Cube, IN.worldRefl);
-
+		void surf (Input IN, inout SurfaceOutput o) 
+		{
+			half3 tex = tex2D(_MainTex, float2(IN.uv_MainTex.x +(_WaveSpeed.x * _Time.x),IN.uv_MainTex.y+(_WaveSpeed.y * _Time.x))).rgb *_Distortion;
+			half3 tex2 = tex2D(_BottomTex, float2(IN.uv_BottomTex.x+tex.b+(_WaveSpeed.z * _Time.x),IN.uv_BottomTex.y+tex.g)+(_WaveSpeed.w * _Time.x)).rgb*_Exposure;
+			half3 emis1 = texCUBE (_Cube, IN.worldRefl).rgb *.7;
+			o.Albedo = tex2; 
+			o.Gloss = _Glos;
+			o.Emission = emis1;
 		}
 		ENDCG
-	} 
-	FallBack "Diffuse"
+	}
+	Fallback "Diffuse"
 }
