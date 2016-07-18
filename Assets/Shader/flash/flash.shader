@@ -8,62 +8,44 @@
     }
     SubShader
     {
-    	Tags { "Queue"="Transparent" "RenderType"="Transparent" }
+    	Tags { "Queue"="Transparent" "RenderType"="Opaque" }
     
         CGPROGRAM
         #pragma surface surf Lambert exclude_path:prepass noforwardadd
-//		#pragma target 3.0
+		//#pragma target 3.0
 
         sampler2D _MainTex;
-        float4 _FlashColor;
-        float _Angle;
-        float _Width;
-        float _LoopTime;
-        float _Interval;
+        half4 _FlashColor;
+        half _Width;
+        half _LoopTime;
+        half _Interval;
             
         struct Input 
-	{
-		half2 uv_MainTex;
-	};
+		{
+			half2 uv_MainTex;
+		};
            
-        float inFlash(half2 uv)
-        {	
-            float brightness = 0;
+        half inFlash(half2 uv)
+        {	            
+            half cot = 0.3;//光条角度
+           
+			half xBottomRightBound = (_Time.y - (int)_Time.y) * (1.0 + cot);
+            half xBottomLeftBound = xBottomRightBound - _Width;
             
-            float cot = 0.7;//光条角度
-            
-			float currentTime = _Time.y;
-			float totalTime = _Interval + _LoopTime;
-            float currentTurnStartTime = (int)((currentTime / totalTime)) * totalTime;
-            float currentTurnTimePassed = currentTime - currentTurnStartTime - _Interval;
-            
-			float xBottomFarLeft = 0.0;
-			float xBottomFarRight = 1.0 + cot;
-			
-			float percent = currentTurnTimePassed / _LoopTime;
-            float xBottomRightBound = xBottomFarLeft + percent * (xBottomFarRight - xBottomFarLeft);
-            float xBottomLeftBound = xBottomRightBound - _Width;
-            
-            float xProj = uv.x + uv.y * cot;
-            
-            if(xProj > xBottomLeftBound && xProj < xBottomRightBound)
-            {
-              	brightness = 1.0 - abs(2.0 * xProj - (xBottomLeftBound + xBottomRightBound)) / _Width;
-            }
+            half xProj = uv.x + uv.y * cot;
 
-            return brightness;
+            return xProj > xBottomLeftBound && xProj < xBottomRightBound ? 1.0 - abs(2.0 * xProj - (xBottomLeftBound + xBottomRightBound)) / _Width : 0;
         }
         
         void surf (Input IN, inout SurfaceOutput o)
         {                
             half4 texCol = tex2D(_MainTex, IN.uv_MainTex);
-            float brightness = inFlash(IN.uv_MainTex);
-        
+			half brightness = inFlash(IN.uv_MainTex);
             o.Albedo = texCol.rgb + _FlashColor.rgb * brightness;
             o.Alpha = texCol.a;
         }
         
-        ENDCG     
+        ENDCG
     }
     
     FallBack "Unlit/Transparent"
